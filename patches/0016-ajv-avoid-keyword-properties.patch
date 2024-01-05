@@ -1,0 +1,17 @@
+--- ./node_modules/ajv/lib/compile/util.js	2022-11-22 00:46:14.734367404 +0000
++++ ./node_modules/ajv/lib/compile/util.js	2022-11-23 20:28:14.673123170 +0000
+@@ -103,7 +103,13 @@
+ }
+ 
+ 
+-var IDENTIFIER = /^[a-z$_][a-z$_0-9]*$/i;
++/*
++ * Some opinionated environments forbid keywords as
++ * uncomputed property names. In order to be neat to
++ * them, let's make every property computed:
++ */
++// var IDENTIFIER = /^[a-z$_][a-z$_0-9]*$/i;
++var IDENTIFIER = /^\b$/;
+ var SINGLE_QUOTE = /'|\\/g;
+ function getProperty(key) {
+   return typeof key == 'number'

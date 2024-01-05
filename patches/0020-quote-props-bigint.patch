@@ -1,0 +1,38 @@
+--- ./node_modules/eslint/lib/rules/quote-props.js	2023-12-26 23:03:45.102520853 +0100
++++ ./node_modules/eslint/lib/rules/quote-props.js	2023-12-26 22:53:53.165325197 +0100
+@@ -134,7 +134,7 @@
+             }
+ 
+             // Otherwise, the key is either an identifier or a number literal.
+-            return `"${key.type === "Identifier" ? key.name : key.value}"`;
++            return `"${key.type === "Identifier" ? key.name : key.bigint || key.value}"`;
+         }
+ 
+         /**
+@@ -187,7 +187,7 @@
+                 context.report({
+                     node,
+                     messageId: "unquotedNumericProperty",
+-                    data: { property: key.value },
++                    data: { property: key.bigint || key.value },
+                     fix: fixer => fixer.replaceText(key, getQuotedKey(key))
+                 });
+             }
+@@ -205,7 +205,7 @@
+                 context.report({
+                     node,
+                     messageId: "unquotedPropertyFound",
+-                    data: { property: key.name || key.value },
++                    data: { property: key.name || key.bigint || key.value },
+                     fix: fixer => fixer.replaceText(key, getQuotedKey(key))
+                 });
+             }
+@@ -277,7 +277,7 @@
+                     context.report({
+                         node: property,
+                         messageId: "inconsistentlyQuotedProperty",
+-                        data: { key: property.key.name || property.key.value },
++                        data: { key: property.key.name || property.key.bigint || property.key.value },
+                         fix: fixer => fixer.replaceText(property.key, getQuotedKey(property.key))
+                     });
+                 });

@@ -1,0 +1,38 @@
+--- ./node_modules/js-sdsl/dist/cjs/container/TreeContainer/OrderedMap.js	2022-11-22 00:46:14.754367418 +0000
++++ ./node_modules/js-sdsl/dist/cjs/container/TreeContainer/OrderedMap.js	2022-11-22 01:00:27.618822246 +0000
+@@ -24,18 +24,24 @@
+             (0, _throwError.throwIteratorAccessError)();
+         }
+         const r = this;
+-        return new Proxy([], {
+-            get(e, t) {
+-                if (t === "0") return r.o.u; else if (t === "1") return r.o.l;
+-            },
+-            set(e, t, s) {
+-                if (t !== "1") {
+-                    throw new TypeError("props must be 1");
+-                }
+-                r.o.l = s;
+-                return true;
+-            }
++        var res = [];
++        Object.defineProperty(res, "0", {
++          get: function () {
++            return r.o.u;
++          },
++          set: function (s) {
++            throw new TypeError("props must be 1");
++          },
+         });
++        Object.defineProperty(res, "1", {
++          get: function () {
++            return r.o.l
++          },
++          set: function (s) {;
++            r.o.l = s;
++          },
++        });
++        return res;
+     }
+     copy() {
+         return new OrderedMapIterator(this.o, this.h, this.iteratorType);

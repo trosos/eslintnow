@@ -1,0 +1,22 @@
+--- ./node_modules/@babel/runtime-corejs3/regenerator/index.js	2022-11-11 22:47:38.488597455 +0000
++++ ./node_modules/@babel/runtime-corejs3/regenerator/index.js	2022-11-12 11:23:39.043602448 +0000
+@@ -3,7 +3,14 @@
+ var runtime = require("../helpers/regeneratorRuntime")();
+ module.exports = runtime;
+ 
++/*
++ * We don't need to pollute the global object now that Babel's
++ * plugin-transform-runtime inlines regeneratorRuntime as a normal helper
++ * ( see https://github.com/babel/babel/pull/14538 ).
++ * For the above reason, let's comment this functionality out:
++ */
+ // Copied from https://github.com/facebook/regenerator/blob/main/packages/runtime/runtime.js#L736=
++/*
+ try {
+   regeneratorRuntime = runtime;
+ } catch (accidentalStrictMode) {
+@@ -13,3 +20,4 @@
+     Function("r", "regeneratorRuntime = r")(runtime);
+   }
+ }
++*/

@@ -1,0 +1,19 @@
+--- ./node_modules/@babel/runtime-corejs3/helpers/inherits.js	2022-11-11 22:47:38.464597560 +0000
++++ ./node_modules/@babel/runtime-corejs3/helpers/inherits.js	2022-11-12 12:07:29.950739778 +0000
+@@ -12,9 +12,15 @@
+       configurable: true
+     }
+   });
++  /*
++   * Some engines disallow changing attributes of the "prototype" property
++   * of functions. Let's comment this feature out:
++   */
++  /*
+   _Object$defineProperty(subClass, "prototype", {
+     writable: false
+   });
++  */
+   if (superClass) setPrototypeOf(subClass, superClass);
+ }
+ module.exports = _inherits, module.exports.__esModule = true, module.exports["default"] = module.exports;
+\ No newline at end of file

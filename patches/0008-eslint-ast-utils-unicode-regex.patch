@@ -1,0 +1,16 @@
+--- ./node_modules/eslint/lib/shared/ast-utils.js	2022-11-11 22:47:38.188598766 +0000
++++ ./node_modules/eslint/lib/shared/ast-utils.js	2022-11-12 18:48:48.502005923 +0000
+@@ -18,7 +18,12 @@
+  * @returns {RegExp} A global regular expression that matches line terminators
+  */
+ function createGlobalLinebreakMatcher() {
+-    return new RegExp(lineBreakPattern.source, "gu");
++    /*
++     * Let's give a helping hand to babel-plugin-transform-unicode-regex
++     * by using regex literal.
++     */
++    return /\r\n|[\r\n\u2028\u2029]/gu;
++    //return new RegExp(lineBreakPattern.source, "gu");
+ }
+ 
+ module.exports = {

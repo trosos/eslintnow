@@ -1,0 +1,31 @@
+--- ./node_modules/typedarray/index.js	2022-11-22 00:46:14.302367099 +0000
++++ ./node_modules/typedarray/index.js	2022-11-23 00:58:57.350709862 +0000
+@@ -398,9 +398,14 @@
+ 			}
+ 
+ 			var bytes = [];
+-			for (var i = 0, o = this.byteOffset + (index * this.BYTES_PER_ELEMENT);
++			/*
++			 * Let's emulate little endian architecture, because
++			 * JSBI (a depending library) seems to have a bug causing
++			 * it not to work correctly in big-endian environments:
++			 */
++			for (var i = 0, o = this.byteOffset + ((index + 1) * this.BYTES_PER_ELEMENT) - 1;
+ 				i < this.BYTES_PER_ELEMENT;
+-				i += 1, o += 1) {
++				i += 1, o -= 1) {
+ 				bytes.push(this.buffer._bytes[o]);
+ 			}
+ 			return this._unpack(bytes);
+@@ -418,9 +423,9 @@
+ 				var bytes = this._pack(value);
+ 				var i;
+ 				var o;
+-				for (i = 0, o = this.byteOffset + (index * this.BYTES_PER_ELEMENT);
++				for (i = 0, o = this.byteOffset + ((index + 1) * this.BYTES_PER_ELEMENT) - 1;
+ 					i < this.BYTES_PER_ELEMENT;
+-					i += 1, o += 1) {
++					i += 1, o -= 1) {
+ 					this.buffer._bytes[o] = bytes[i];
+ 				}
+ 			}

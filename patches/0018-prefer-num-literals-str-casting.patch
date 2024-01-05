@@ -1,0 +1,19 @@
+--- ./node_modules/eslint/lib/rules/prefer-numeric-literals.js	2023-12-21 20:57:22.898147926 +0100
++++ ./node_modules/eslint/lib/rules/prefer-numeric-literals.js	2023-12-21 21:06:43.746243033 +0100
+@@ -10,6 +10,7 @@
+ //------------------------------------------------------------------------------
+ 
+ const astUtils = require("./utils/ast-utils");
++const _Number = require("core-js-pure/actual/number/constructor");
+ 
+ //------------------------------------------------------------------------------
+ // Helpers
+@@ -98,7 +99,7 @@
+ 
+                             const replacement = `${literalPrefix}${str}`;
+ 
+-                            if (+replacement !== parseInt(str, radix)) {
++                            if (_Number(replacement) !== parseInt(str, radix)) {
+ 
+                                 /*
+                                  * If the newly-produced literal would be invalid, (e.g. 0b1234),

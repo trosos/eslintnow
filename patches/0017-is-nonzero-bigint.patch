@@ -1,0 +1,30 @@
+--- ./node_modules/eslint/lib/rules/utils/ast-utils.js	2022-11-22 00:46:14.618367322 +0000
++++ ./node_modules/eslint/lib/rules/utils/ast-utils.js	2022-11-24 13:21:50.932353703 +0000
+@@ -18,6 +18,7 @@
+     lineBreakPattern,
+     shebangPattern
+ } = require("../../shared/ast-utils");
++const JSBI = require("../../../../../jsbi-git/lib/jsbi.ts");
+ 
+ //------------------------------------------------------------------------------
+ // Helpers
+@@ -45,6 +46,8 @@
+ 
+ const LOGICAL_ASSIGNMENT_OPERATORS = new Set(["&&=", "||=", "??="]);
+ 
++const bigZero = JSBI.BigInt("0");
++
+ /**
+  * Checks reference if is non initializer and writable.
+  * @param {Reference} reference A reference to check.
+@@ -813,6 +816,10 @@
+             return true;
+         }
+ 
++        if (node.bigint) {
++            return !JSBI.equal(JSBI.BigInt(node.bigint), bigZero);
++        }
++
+         return null;
+     }
+ 

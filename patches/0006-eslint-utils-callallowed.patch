@@ -1,0 +1,118 @@
+--- ./node_modules/eslint-utils/index.js	2022-11-22 00:46:14.342367127 +0000
++++ ./node_modules/eslint-utils/index.js	2022-11-24 21:26:23.823242525 +0000
+@@ -310,53 +310,71 @@
+         "WeakSet",
+     ]),
+ );
+-const callAllowed = new Set(
++/*
++ * core-js-pure implementation of Set#add relies on defining a custom
++ * property to the element; however, some engines seal builtins,
++ * thus effectively preventing them from being in Set. There is
++ * no way for these egines to reliably hash builtins. To make them
++ * happy, let's fake Set with Array.
++ *
++ * Also, we need the real builtins here, not the core-js-pure
++ * ponyfills. This is why we need to access them via globalObject.
++ */
++function FakeSet(members) {
++  this.members = members;
++}
++FakeSet.prototype = {
++  has(obj) {
++    return this.members.indexOf(obj) !== -1;
++  },
++};
++const callAllowed = new FakeSet(
+     [
+-        Array.isArray,
+-        typeof BigInt === "function" ? BigInt : undefined,
+-        Boolean,
+-        Date,
+-        Date.parse,
+-        decodeURI,
+-        decodeURIComponent,
+-        encodeURI,
+-        encodeURIComponent,
+-        escape,
+-        isFinite,
+-        isNaN,
+-        isPrototypeOf,
+-        ...Object.getOwnPropertyNames(Math)
+-            .map((k) => Math[k])
++        globalObject.Array.isArray,
++        typeof globalObject.BigInt === "function" ? globalObject.BigInt : undefined,
++        globalObject.Boolean,
++        globalObject.Date,
++        globalObject.Date.parse,
++        globalObject.decodeURI,
++        globalObject.decodeURIComponent,
++        globalObject.encodeURI,
++        globalObject.encodeURIComponent,
++        globalObject.escape,
++        globalObject.isFinite,
++        globalObject.isNaN,
++        globalObject.isPrototypeOf,
++        ...Object.getOwnPropertyNames(globalObject.Math)
++            .map((k) => globalObject.Math[k])
+             .filter((f) => typeof f === "function"),
+-        Number,
+-        Number.isFinite,
+-        Number.isNaN,
+-        Number.parseFloat,
+-        Number.parseInt,
+-        Object,
+-        Object.entries,
+-        Object.is,
+-        Object.isExtensible,
+-        Object.isFrozen,
+-        Object.isSealed,
+-        Object.keys,
+-        Object.values,
+-        parseFloat,
+-        parseInt,
+-        RegExp,
+-        String,
+-        String.fromCharCode,
+-        String.fromCodePoint,
+-        String.raw,
+-        Symbol.for,
+-        Symbol.keyFor,
+-        unescape,
+-    ].filter((f) => typeof f === "function"),
++        globalObject.Number,
++        globalObject.Number.isFinite,
++        globalObject.Number.isNaN,
++        globalObject.Number.parseFloat,
++        globalObject.Number.parseInt,
++        globalObject.Object,
++        globalObject.Object.entries,
++        globalObject.Object.is,
++        globalObject.Object.isExtensible,
++        globalObject.Object.isFrozen,
++        globalObject.Object.isSealed,
++        globalObject.Object.keys,
++        globalObject.Object.values,
++        globalObject.parseFloat,
++        globalObject.parseInt,
++        globalObject.RegExp,
++        globalObject.String,
++        globalObject.String.fromCharCode,
++        globalObject.String.fromCodePoint,
++        globalObject.String.raw,
++        globalObject.Symbol && globalObject.Symbol.for,
++        globalObject.Symbol && globalObject.Symbol.keyFor,
++        globalObject.unescape,
++    ]
+ );
+-const callPassThrough = new Set([
+-    Object.freeze,
+-    Object.preventExtensions,
+-    Object.seal,
++const callPassThrough = new FakeSet([
++    globalObject.Object.freeze,
++    globalObject.Object.preventExtensions,
++    globalObject.Object.seal,
+ ]);
+ 
+ /**

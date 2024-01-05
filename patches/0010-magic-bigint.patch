@@ -1,0 +1,82 @@
+--- ./node_modules/eslint/lib/rules/no-magic-numbers.js	2022-11-19 00:13:29.490348580 +0000
++++ ./node_modules/eslint/lib/rules/no-magic-numbers.js	2022-11-19 00:45:41.077388719 +0000
+@@ -6,6 +6,7 @@
+ "use strict";
+ 
+ const astUtils = require("./utils/ast-utils");
++const JSBI = require("../../../../jsbi-git/lib/jsbi.ts");
+ 
+ // Maximum array length by the ECMAScript Specification.
+ const MAX_ARRAY_LENGTH = 2 ** 32 - 1;
+@@ -14,18 +15,6 @@
+ // Rule Definition
+ //------------------------------------------------------------------------------
+ 
+-/**
+- * Convert the value to bigint if it's a string. Otherwise return the value as-is.
+- * @param {bigint|number|string} x The value to normalize.
+- * @returns {bigint|number} The normalized value.
+- */
+-function normalizeIgnoreValue(x) {
+-    if (typeof x === "string") {
+-        return BigInt(x.slice(0, -1));
+-    }
+-    return x;
+-}
+-
+ /** @type {import('../shared/types').Rule} */
+ module.exports = {
+     meta: {
+@@ -84,7 +73,8 @@
+         const config = context.options[0] || {},
+             detectObjects = !!config.detectObjects,
+             enforceConst = !!config.enforceConst,
+-            ignore = new Set((config.ignore || []).map(normalizeIgnoreValue)),
++            ignore = new Set((config.ignore || []).filter(x => typeof x !== "string")),
++            ignoreBigInt = (config.ignore || []).filter(x => typeof x === "string").map(x => JSBI.BigInt(x.slice(0, -1))),
+             ignoreArrayIndexes = !!config.ignoreArrayIndexes,
+             ignoreDefaultValues = !!config.ignoreDefaultValues,
+             ignoreClassFieldInitialValues = !!config.ignoreClassFieldInitialValues;
+@@ -97,6 +87,9 @@
+          * @returns {boolean} true if the value is ignored
+          */
+         function isIgnoredValue(value) {
++            if (value instanceof JSBI) {
++              return ignoreBigInt.some(x => JSBI.equal(value, x));
++            }
+             return ignore.has(value);
+         }
+ 
+@@ -179,8 +172,8 @@
+             const parent = fullNumberNode.parent;
+ 
+             return parent.type === "MemberExpression" && parent.property === fullNumberNode &&
+-                (Number.isInteger(value) || typeof value === "bigint") &&
+-                value >= 0 && value < MAX_ARRAY_LENGTH;
++                (Number.isInteger(value) && value >= 0 && value < MAX_ARRAY_LENGTH ||
++                    value instanceof JSBI && JSBI.GE(value, 0) && JSBI.LT(value, MAX_ARRAY_LENGTH));
+         }
+ 
+         return {
+@@ -196,11 +189,19 @@
+                 // Treat unary minus as a part of the number
+                 if (node.parent.type === "UnaryExpression" && node.parent.operator === "-") {
+                     fullNumberNode = node.parent;
+-                    value = -node.value;
++                    if (node.bigint) {
++                        value = JSBI.unaryMinus(JSBI.BigInt(node.bigint));
++                    } else {
++                        value = -node.value;
++                    }
+                     raw = `-${node.raw}`;
+                 } else {
+                     fullNumberNode = node;
+-                    value = node.value;
++                    if (node.bigint) {
++                        value = JSBI.BigInt(node.bigint);
++                    } else {
++                        value = node.value;
++                    }
+                     raw = node.raw;
+                 }
+ 

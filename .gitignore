@@ -1,1 +1,7 @@
 *~
+node_modules/
+eslint-git/
+jsbi-git/
+dist/
+/package-lock.json
+/npm-shrinkwrap.json

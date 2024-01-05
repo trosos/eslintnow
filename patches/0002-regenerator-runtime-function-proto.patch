@@ -1,0 +1,18 @@
+--- ./node_modules/@babel/runtime-corejs3/helpers/regeneratorRuntime.js	2022-11-11 22:47:38.476597508 +0000
++++ ./node_modules/@babel/runtime-corejs3/helpers/regeneratorRuntime.js	2022-11-12 00:02:29.266271746 +0000
+@@ -68,7 +68,15 @@
+   define(IteratorPrototype, iteratorSymbol, function () {
+     return this;
+   });
++  /*
++   * Some engines scream when asked to evaluate
++   * Object.getPrototypeOf(Function.prototype)
++   * Let's undefine getProto to avoid calling
++   * getProto(getProto(values([]))),
++   * forcing usage of IteratorPrototype.
++   */
+   var getProto = _Object$getPrototypeOf,
++    getProto = void 0,
+     NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+   NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype);
+   var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = _Object$create(IteratorPrototype);

@@ -1,0 +1,44 @@
+--- ./node_modules/eslint/lib/config/default-config.js	2022-11-11 22:47:38.284598347 +0000
++++ ./node_modules/eslint/lib/config/default-config.js	2022-11-12 14:11:50.694052344 +0000
+@@ -15,6 +15,16 @@
+ // Helpers
+ //-----------------------------------------------------------------------------
+ 
++var rules = {};
++Map.prototype.forEach.call(Rules, function (load, ruleId) {
++  Object.defineProperty(rules, ruleId, {
++    get: function () {
++      return Rules.get(ruleId);
++    },
++    enumerable: true,
++  });
++});
++
+ exports.defaultConfig = [
+     {
+         plugins: {
+@@ -29,6 +39,16 @@
+                  * aspect of the rules map while still keeping all of the
+                  * relevant configuration inside of the config array.
+                  */
++                /*
++                 * core-js doesn't provide polyfill for Proxy
++                 * (and transpiling Proxy to ES5 would be
++                 * somewhere from difficult to impossible).
++                 * In this case, the fix is relatively easy:
++                 * we just need to replace the proxy pattern
++                 * with the getter pattern:
++                 */
++                rules: rules
++                /*
+                 rules: new Proxy({}, {
+                     get(target, property) {
+                         return Rules.get(property);
+@@ -38,6 +58,7 @@
+                         return Rules.has(property);
+                     }
+                 })
++                */
+             }
+         },
+         languageOptions: {

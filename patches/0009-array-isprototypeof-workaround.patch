@@ -1,0 +1,19 @@
+--- ./node_modules/core-js-pure/internals/object-is-prototype-of.js	2022-11-15 16:54:35.883178274 +0000
++++ ./node_modules/core-js-pure/internals/object-is-prototype-of.js	2022-11-17 12:30:07.843757818 +0000
+@@ -1,3 +1,16 @@
+ var uncurryThis = require('../internals/function-uncurry-this');
++var global = require('../internals/global');
+ 
+ module.exports = uncurryThis({}.isPrototypeOf);
++
++/*
++ * Some nasty environments have broken prototype chain of Array.
++ * Let's help them out:
++ */
++if (!([] instanceof Object)) {
++  var globalArrayPrototype = global.global.JSON.parse("[]").constructor.prototype;
++  module.exports = function (proto, it) {
++    if (proto === Array.prototype) proto = globalArrayPrototype;
++    return {}.isPrototypeOf.call(proto, it);
++  }
++}

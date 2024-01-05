@@ -1,0 +1,9 @@
+--- ./node_modules/core-js-pure/modules/es.json.to-string-tag.js	2022-11-11 22:47:38.532597262 +0000
++++ ./node_modules/core-js-pure/modules/es.json.to-string-tag.js	2022-11-11 22:56:14.566822971 +0000
+@@ -3,4 +3,5 @@
+ 
+ // JSON[@@toStringTag] property
+ // https://tc39.es/ecma262/#sec-json-@@tostringtag
+-setToStringTag(global.JSON, 'JSON', true);
++// Commented out to prevent mutating the builtin object JSON:
++//setToStringTag(global.JSON, 'JSON', true);

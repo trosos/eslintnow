@@ -1,0 +1,19 @@
+--- ./node_modules/eslint/lib/rules/no-nonoctal-decimal-escape.js	2022-11-22 00:46:54.174394739 +0000
++++ ./node_modules/eslint/lib/rules/no-nonoctal-decimal-escape.js	2022-11-22 21:18:43.032812150 +0000
+@@ -81,11 +81,13 @@
+                     return;
+                 }
+ 
+-                const regex = /(?:[^\\]|(?<previousEscape>\\.))*?(?<decimalEscape>\\[89])/suy;
++                const sanified = node.raw.replace(/\\\\/g, "..");
++                const regex = /(\\0)?(\\[89])/g;
+                 let match;
+ 
+-                while ((match = regex.exec(node.raw))) {
+-                    const { previousEscape, decimalEscape } = match.groups;
++                while ((match = regex.exec(sanified))) {
++                    const previousEscape = match[1];
++                    const decimalEscape = match[2];
+                     const decimalEscapeRangeEnd = node.range[0] + match.index + match[0].length;
+                     const decimalEscapeRangeStart = decimalEscapeRangeEnd - decimalEscape.length;
+                     const decimalEscapeRange = [decimalEscapeRangeStart, decimalEscapeRangeEnd];

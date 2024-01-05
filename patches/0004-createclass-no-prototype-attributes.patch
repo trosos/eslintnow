@@ -1,0 +1,19 @@
+--- ./node_modules/@babel/runtime-corejs3/helpers/createClass.js	2022-11-11 22:47:38.416597770 +0000
++++ ./node_modules/@babel/runtime-corejs3/helpers/createClass.js	2022-11-12 11:55:28.076663346 +0000
+@@ -11,9 +11,15 @@
+ function _createClass(Constructor, protoProps, staticProps) {
+   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+   if (staticProps) _defineProperties(Constructor, staticProps);
++  /*
++   * Some engines disallow changing attributes of the "prototype" property
++   * of functions. Let's comment this feature out:
++   */
++  /*
+   _Object$defineProperty(Constructor, "prototype", {
+     writable: false
+   });
++  */
+   return Constructor;
+ }
+ module.exports = _createClass, module.exports.__esModule = true, module.exports["default"] = module.exports;
+\ No newline at end of file
