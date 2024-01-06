@@ -1,8 +1,9 @@
 # ESLintNow
 
-ESLintNow is an unofficial ES5 port of [ESLint](https://eslint.org/),
-suitable for prehistoric and quirky JavaScript engines (like the one
-that the ServiceNow platform uses for its *ES5 Standards Mode*).
+ESLintNow is an unofficial ES5 port and distribution of
+[ESLint](https://eslint.org/), suitable for prehistoric and quirky
+JavaScript engines (like the one that the ServiceNow platform uses
+for its *ES5 Standards Mode*).
 
 ## Table of contents
   1. [Build dependencies](#build-dependencies)
