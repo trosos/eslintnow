@@ -15,13 +15,13 @@
 <release_date/>
 <remote_base_update_set display_value=""/>
 <remote_parent_id/>
-<remote_sys_id>{1:sys_update_set:1:ESLintNow:\l../timestamp.txt\pcat\r|subs|eval|md5}</remote_sys_id>
+<remote_sys_id>{1:sys_update_set:1:\l../dist/build_hash.txt\pcat\r|subs|eval|md5}</remote_sys_id>
 <state>loaded</state>
 <summary/>
 <sys_class_name>sys_remote_update_set</sys_class_name>
 <sys_created_by>admin</sys_created_by>
 <sys_created_on>{../timestamp.txt|cat}</sys_created_on>
-<sys_id>{1:sys_remote_update_set:1:ESLintNow:\l../timestamp.txt\pcat\r|subs|eval|md5}</sys_id>
+<sys_id>{1:sys_remote_update_set:1:\l../dist/build_hash.txt\pcat\r|subs|eval|md5}</sys_id>
 <sys_mod_count>0</sys_mod_count>
 <sys_updated_by>admin</sys_updated_by>
 <sys_updated_on>{../timestamp.txt|cat}</sys_updated_on>

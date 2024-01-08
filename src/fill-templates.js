@@ -82,6 +82,7 @@ function applyFilter(filter, str) {
 
 fs.readdirSync(templateDir, {withFileTypes: true}).sort().forEach(dirent => {
   if (dirent.name.endsWith(".inc") || dirent.isDirectory()) return;
-  const result = applyFilter("eval", `{${path.resolve(templateDir, dirent.name)}|cat|eval}`);
-  fs.writeFileSync(path.resolve(distDir, dirent.name), result);
+  const destName = path.resolve(distDir, dirent.name);
+  fs.writeFileSync(destName, "");
+  fs.writeFileSync(destName, applyFilter("eval", `{${dirent.name}|cat|eval}`));
 });
