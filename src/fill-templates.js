@@ -44,7 +44,7 @@ function applyFilter(filter, str) {
     },
     eval(str) {
       return str
-        .replace(/(}\n*)\n({)|(})\n|\n({)/g, "$1$2$3$4")
+        .replace(/(}\n*)\n({)|(})\n(?!\n*$)|(?<!^\n*)\n({)/g, "$1$2$3$4")
         .replace(/{([\s\S]*?)}/g, (_, placeholder) => {
           const [original, ...filters] = placeholder.split("|");
           return filters.reduce((str, filter) => applyFilter(filter.trim(), str), original);
@@ -84,5 +84,5 @@ fs.readdirSync(templateDir, {withFileTypes: true}).sort().forEach(dirent => {
   if (dirent.name.endsWith(".inc") || dirent.isDirectory()) return;
   const destName = path.resolve(distDir, dirent.name);
   fs.writeFileSync(destName, "");
-  fs.writeFileSync(destName, applyFilter("eval", `{${dirent.name}|cat|eval}`));
+  fs.writeFileSync(destName, applyFilter("eval", `{${dirent.name}|cat|eval}`).replace(/$/, "\n"));
 });
