@@ -32,7 +32,7 @@ function rmrf(names) {
 }
 
 function execNpm(args) {
-  childProcess.execFileSync("npm", args, { cwd: rootDir });
+  childProcess.execFileSync("npm", args, {cwd: rootDir, stdio: "inherit"});
 }
 
 function clean() {
