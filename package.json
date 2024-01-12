@@ -37,7 +37,7 @@
     "install:git:tests": "npm-run-all -s install:git:tests:*",
     "install:git:tests:rmdst": "rimraf ./eslint-git",
     "install:git:tests:clone": "git clone https://github.com/eslint/eslint.git eslint-git",
-    "install:git:tests:checkout": "git -C eslint-git checkout 762a8727fb3b5619cff900826053b643ca5f1162",
+    "install:git:tests:checkout": "git -C eslint-git checkout d8c8ede088e1f4a82c9b6b5c2772af268b9161aa",
     "build": "npm-run-all -s build:*",
     "build:webpack": "webpack",
     "build:ruleutils": "copyup ./src/ruleUtils.js ./dist",
