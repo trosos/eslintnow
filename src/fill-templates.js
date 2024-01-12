@@ -23,17 +23,11 @@ const path = require("path");
 const templateDir = path.resolve(__dirname, "../templates");
 const distDir = path.resolve(__dirname, "../dist");
 
-const payhashRegex = new RegExp([
-  "<sys_code/>",
-  "<sys_created_by>.*?</sys_created_by>",
-  "<sys_created_on>.*?</sys_created_on>",
-  "<sys_id>.*?</sys_id>",
-  "<sys_mod_count>.*?</sys_mod_count>",
-  "<sys_package .*?>.*?</sys_package>",
-  "<sys_update_name>.*?</sys_update_name>",
-  "<sys_updated_by>.*?</sys_updated_by>",
-  "<sys_updated_on>.*?</sys_updated_on>",
-].join('|'), "g");
+const payhashRegex = new RegExp(
+  "code created_by created_on id mod_count package update_name updated_by updated_on"
+    .split(" ").map(x => `<sys_${x}[ >].*?</sys_${x}>|<sys_${x}/>`).join("|"),
+  "g"
+);
 
 let buffer = "";
 
@@ -72,7 +66,7 @@ function applyFilter(filter, str) {
       return date.getTime().toString(16);
     },
     cdata(str) {
-      if (!/<!\[CDATA\[|]]>/.test(str)) return "<![CDATA[" + str + "]]>";
+      if (!/<!\[CDATA\[|]]>/.test(str)) return `<![CDATA[${str}]]>`;
       return str.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
     },
   }[filter] || function (str) {
